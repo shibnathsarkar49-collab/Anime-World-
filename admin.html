@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Admin | Landing Page Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1115;--surface:#181b21;--line:#262a33;--text:#f4f6f8;--muted:#9aa3b0;--accent:#2aabee;--ink:#04202f;--bad:#ff6b6b;--ok:#3ddc97}
+@media(prefers-color-scheme:light){:root{--bg:#f5f7fa;--surface:#fff;--line:#e3e8ee;--text:#10202d;--muted:#5d6b78;--accent:#1a8fd1;--ink:#fff;--bad:#d93d3d;--ok:#12915f}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.top b{font-size:1.05rem}.sp{flex:1}
+.status{font-size:.85rem;color:var(--muted)}.status.dirty{color:#f5b942}
+.mail{color:var(--muted);font-size:.82rem}
+.btn{background:var(--accent);color:var(--ink);border:0;border-radius:10px;padding:10px 18px;font-weight:700}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.ghost{background:none;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 14px;font-weight:600}
+.ib{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:5px 10px;font-size:.85rem}
+.ib:disabled{opacity:.35;cursor:default}.danger{color:var(--bad)}
+.login{max-width:380px;margin:12vh auto;padding:0 20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.login h1{font-size:1.4rem;margin-bottom:4px}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-top:14px}
+input{display:block;width:100%;margin-top:6px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.login .btn{width:100%;margin-top:18px}
+.err{color:var(--bad);font-size:.85rem;margin-top:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;max-width:1120px;margin:0 auto;padding:24px 20px 90px}
+.col{display:grid;gap:16px;align-content:start}
+.pvwrap{position:sticky;top:76px;align-self:start}
+h2{font-size:1.02rem}.hint{color:var(--muted);font-size:.85rem}
+.ch{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.tp{aspect-ratio:16/9;border-radius:12px;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;color:var(--muted);font-size:.85rem;text-align:center;padding:10px;margin-bottom:2px}
+.tp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.tp.ok{border:2px solid var(--ok)}.tp.ok img{display:block}.tp.ok span{display:none}
+.tp.bad{border-color:var(--bad);color:var(--bad)}
+.cnt{float:right;font-weight:400}
+.add{width:100%;border:2px dashed var(--line);background:none;color:var(--text);border-radius:16px;padding:16px;font-weight:600}
+.add:disabled{opacity:.45;cursor:not-allowed}
+.pv{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg)}
+.pvbar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:.9rem}
+.av{width:28px;height:28px;border-radius:50%;background:var(--accent) center/cover;flex:none}
+.pill{margin-left:auto;background:var(--accent);color:var(--ink);font-size:.75rem;padding:4px 12px;border-radius:99px}
+.pvlist{display:grid;gap:18px;padding:16px}
+.th{aspect-ratio:16/9;border-radius:12px;background:linear-gradient(135deg,#1b6fa0,#2aabee 60%,#7fd0f7)}
+.pc h3{font-size:.98rem;margin:10px 2px 2px;line-height:1.35}
+.pc p{color:var(--muted);font-size:.8rem;margin:0 2px 10px}
+.jb{background:var(--accent);color:var(--ink);text-align:center;font-weight:700;border-radius:10px;padding:10px;font-size:.88rem}
+.pwrow{position:relative}.pwrow input{padding-right:70px}
+.eye{position:absolute;right:8px;top:calc(50% + 3px);transform:translateY(-50%);background:none;border:0;color:var(--accent);font-weight:600;font-size:.82rem;padding:6px}
+.link{display:block;width:100%;background:none;border:0;color:var(--accent);font-weight:600;margin-top:12px;padding:6px}
+.caps{color:#f5b942;margin-top:8px}
+.demo{background:#f5b942;color:#2b1d00;text-align:center;font-size:.85rem;font-weight:600;padding:8px 14px}
+.empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:12px 20px;border-radius:12px;font-weight:600;font-size:.9rem;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.35);z-index:20;max-width:92vw}
+.toast.ok{border-color:var(--ok)}.toast.bad{border-color:var(--bad)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.pvwrap{position:static}.mail{display:none}}
+</style>
+</head>
+<body>
+
+<section class="login" id="login" hidden>
+  <div class="panel">
+    <h1>Admin login</h1>
+    <p class="hint">Sign in to manage your landing page.</p>
+    <form id="lf">
+      <label>Email<input id="em" type="email" autocomplete="username" required></label>
+      <label>Password<div class="pwrow"><input id="pw" type="password" autocomplete="current-password" required><button type="button" class="eye" id="eye">Show</button></div></label>
+      <p class="hint caps" id="caps" hidden>Caps Lock is on</p>
+      <p class="err" id="lerr" hidden></p>
+      <button class="btn" id="lb">Sign in</button>
+      <button type="button" class="link" id="forgot">Forgot password?</button>
+      <p class="hint" id="dh" hidden style="margin-top:14px;text-align:center">Demo login: any email, password <b>demo1234</b></p>
+    </form>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <div class="demo" id="demo" hidden>Demo mode: you can try everything, but changes are not saved. Add your Firebase config to go live.</div>
+  <header class="top">
+    <b>Landing Page Manager</b><span class="sp"></span>
+    <span class="status" id="st">All changes saved</span>
+    <span class="mail" id="who"></span>
+    <button class="ghost" id="chpw">Change password</button>
+    <button class="ghost" id="out">Sign out</button>
+    <button class="btn" id="save">Save &amp; publish</button>
+  </header>
+
+  <main class="layout">
+    <div class="col">
+      <section class="panel">
+        <h2>Channel</h2><p class="hint">Used in the top bar and as the default join link.</p>
+        <label>Channel name<input id="name" maxlength="60" placeholder="My Anime Channel"></label>
+        <label>Telegram channel link<input id="chan" placeholder="https://t.me/yourchannel"></label>
+        <label>Logo link (optional)<input id="logo" placeholder="https://... or logo.jpg"></label>
+      </section>
+
+      <div id="cards" class="col"></div>
+      <button class="add" id="add">+ Add post <span id="count"></span></button>
+    </div>
+
+    <aside class="pvwrap">
+      <h2 style="margin-bottom:8px">Live preview</h2>
+      <div class="pv"><div class="pvbar"><span class="av" id="pvav"></span><span id="pvname">Your Channel Name</span><span class="pill">Join</span></div>
+      <div class="pvlist" id="pv"></div></div>
+      <p class="hint" style="margin-top:10px">Tip: upload thumbnails (16:9, 1280×720) to your GitHub repo and just type the file name, like <b>thumb1.jpg</b>. Or paste any direct image link (Imgur, ImgBB).</p>
+    </aside>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+// Firebase web config (public by design; security comes from Firestore rules + Auth)
+const cfg = {
+  apiKey: "AIzaSyDbtnf17mIy2WDN8NiGBUJDcvS_KCozg6E",
+  authDomain: "landing-page-b86ff.firebaseapp.com",
+  projectId: "landing-page-b86ff",
+  storageBucket: "landing-page-b86ff.firebasestorage.app",
+  messagingSenderId: "560796814156",
+  appId: "1:560796814156:web:574e1d5fbde4005da1dde9"
+};
+const V="10.14.1", G=`https://www.gstatic.com/firebasejs/${V}/`;
+const $=(s,r=document)=>r.querySelector(s);
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const TG=/^https:\/\/(t|telegram)\.me\/[\w+\-\/]+$/i, IMG=/^(https:\/\/\S+|data:image\/\S+|[\w\-\/.]+\.(jpe?g|png|webp|gif|avif))$/i, MAX=3;
+const okImg=u=>IMG.test(u)&&(DEMO||!/^data:/i.test(u));
+const GRAD="linear-gradient(135deg,#1b6fa0,#2aabee 60%,#7fd0f7)";
+const blank=()=>({title:"",thumb:"",url:"",meta:""});
+let S={channelName:"",channelUrl:"",logoUrl:"",cards:[blank()]}, dirty=false, db, auth, fb={};
+
+let DEMO=!cfg.apiKey||cfg.apiKey.startsWith("YOUR"), F, Au;
+
+if(!DEMO){ try{
+  const [A,a,f]=await Promise.all([import(G+"firebase-app.js"),import(G+"firebase-auth.js"),import(G+"firebase-firestore.js")]);
+  Au=a;F=f; const app=A.initializeApp(cfg); auth=Au.getAuth(app); db=F.getFirestore(app);
+  try{await Au.setPersistence(auth,Au.browserSessionPersistence)}catch(e){}
+}catch(e){ DEMO=true } }
+const ph=(a,b,t)=>"data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="640" height="360" fill="url(#g)"/><text x="320" y="190" font-family="sans-serif" font-size="42" font-weight="700" fill="#fff" text-anchor="middle">${t}</text></svg>`);
+function startDemo(){
+  $("#demo").hidden=false;$("#who").textContent="Demo mode";
+  $("#login").hidden=true;$("#app").hidden=false;
+  S={channelName:"My Anime Channel",channelUrl:"https://t.me/yourchannel",logoUrl:"",cards:[
+    {title:"Your Anime Title Here - Episode 1",thumb:ph("#1b6fa0","#7fd0f7","Thumbnail 1"),url:"",meta:"Exclusive on Telegram"},
+    {title:"",thumb:"",url:"",meta:""}]};
+  $("#name").value=S.channelName;$("#chan").value=S.channelUrl;$("#logo").value=S.logoUrl;
+  renderEditor();renderPreview();setDirty(false);resetIdle();
+}
+
+function toast(msg,kind){const t=$("#toast");t.textContent=msg;t.className="toast "+(kind||"");t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3500)}
+function setDirty(v){dirty=v;const s=$("#st");s.textContent=v?"Unsaved changes":"All changes saved";s.className="status"+(v?" dirty":"")}
+
+/* ---------- Auto sign-out after 15 min of inactivity ---------- */
+let idleT,warnT;
+function resetIdle(){
+  clearTimeout(idleT);clearTimeout(warnT); if($("#app").hidden)return;
+  warnT=setTimeout(()=>{if(dirty)toast("Inactive. You will be signed out in 1 minute. Save your changes!","bad")},14*60000);
+  idleT=setTimeout(()=>{doSignOut();toast("Signed out due to inactivity.")},15*60000);
+}
+["mousemove","keydown","click","touchstart","scroll"].forEach(ev=>addEventListener(ev,resetIdle,{passive:true}));
+
+/* ---------- Auth ---------- */
+const onUser=async u=>{
+  $("#login").hidden=!!u; $("#app").hidden=!u;
+  if(!u){resetIdle();return}
+  $("#who").textContent=u.email;
+  try{const s=await F.getDoc(F.doc(db,"site","config"));
+    if(s.exists()){const d=s.data();S={channelName:d.channelName||"",channelUrl:d.channelUrl||"",logoUrl:d.logoUrl||"",cards:(d.cards||[]).slice(0,MAX)}}
+  }catch(e){toast("Couldn't load data: "+e.message,"bad")}
+  $("#name").value=S.channelName;$("#chan").value=S.channelUrl;$("#logo").value=S.logoUrl;
+  renderEditor();renderPreview();setDirty(false);resetIdle();
+};
+if(DEMO){$("#login").hidden=false;$("#dh").hidden=false;$("#forgot").hidden=true;$("#chpw").hidden=true}
+else Au.onAuthStateChanged(auth,onUser);
+let fails=0,lockUntil=0;
+const showErr=m=>{const e=$("#lerr");e.textContent=m;e.hidden=!m};
+$("#lf").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const wait=Math.ceil((lockUntil-Date.now())/1000);
+  if(wait>0)return showErr(`Too many attempts. Try again in ${wait}s.`);
+  const b=$("#lb");b.disabled=true;showErr("");
+  const em=$("#em").value.trim(),pw=$("#pw").value;
+  try{
+    if(DEMO){if(pw!=="demo1234")throw{code:"auth/invalid-credential"};startDemo()}
+    else await Au.signInWithEmailAndPassword(auth,em,pw);
+    fails=0;
+  }catch(x){
+    fails++;
+    if(fails>=5){lockUntil=Date.now()+60000;fails=0;showErr("Too many failed attempts. Locked for 60 seconds.")}
+    else if(/invalid|wrong|user-not-found/.test(x.code))showErr(`Wrong email or password. ${5-fails} attempt${5-fails>1?"s":""} left.`);
+    else if(x.code==="auth/too-many-requests")showErr("Too many attempts. Try again later or reset your password.");
+    else showErr("Sign in failed: "+x.code);
+  }
+  $("#pw").value="";b.disabled=false;
+});
+$("#eye").onclick=()=>{const p=$("#pw"),h=p.type==="password";p.type=h?"text":"password";$("#eye").textContent=h?"Hide":"Show"};
+$("#pw").addEventListener("keyup",e=>{$("#caps").hidden=!(e.getModifierState&&e.getModifierState("CapsLock"))});
+$("#forgot").onclick=async()=>{
+  const em=$("#em").value.trim(); if(!em)return showErr("Enter your email above first, then tap Forgot password.");
+  try{await Au.sendPasswordResetEmail(auth,em)}catch(e){}
+  showErr("");toast("If that email is registered, a reset link has been sent.","ok");
+};
+$("#chpw").onclick=async()=>{
+  try{await Au.sendPasswordResetEmail(auth,auth.currentUser.email);toast("Password reset link sent to "+auth.currentUser.email,"ok")}
+  catch(e){toast("Couldn't send the email: "+e.code,"bad")}
+};
+const doSignOut=()=>{
+  setDirty(false);
+  if(DEMO){$("#app").hidden=true;$("#login").hidden=false;$("#pw").value="";setDirty(false);resetIdle()}
+  else Au.signOut(auth);
+};
+$("#out").onclick=()=>{if(!dirty||confirm("You have unsaved changes. Sign out anyway?"))doSignOut()};
+
+/* ---------- Editor ---------- */
+function renderEditor(){
+  $("#cards").innerHTML=S.cards.map((c,i)=>`
+  <section class="panel" data-i="${i}">
+    <div class="ch"><h2>Post ${i+1}</h2><span class="sp"></span>
+      <button class="ib" data-act="up" ${i==0?"disabled":""}>↑ Up</button>
+      <button class="ib" data-act="down" ${i==S.cards.length-1?"disabled":""}>↓ Down</button>
+      <button class="ib danger" data-act="del">Delete</button></div>
+    <div class="tp"><img alt=""><span></span></div>
+    <label>Thumbnail link<input data-k="thumb" value="${esc(c.thumb)}" placeholder="https://i.imgur.com/abc.jpg  or  thumb1.jpg"></label>
+    <label>Title <span class="cnt">${c.title.length}/90</span><input data-k="title" maxlength="90" value="${esc(c.title)}" placeholder="Your Anime Title - Episode 1"></label>
+    <label>Telegram link (optional, default is channel link)<input data-k="url" value="${esc(c.url)}" placeholder="https://t.me/yourchannel/123"></label>
+    <label>Small text (optional)<input data-k="meta" maxlength="50" value="${esc(c.meta)}" placeholder="Exclusive on Telegram"></label>
+  </section>`).join("");
+  S.cards.forEach((_,i)=>setThumb(i));
+  $("#add").disabled=S.cards.length>=MAX; $("#count").textContent=`(${S.cards.length}/${MAX})`;
+}
+function setThumb(i){
+  const box=$(`[data-i="${i}"] .tp`); if(!box)return;
+  const img=$("img",box),msg=$("span",box),u=S.cards[i].thumb.trim();
+  img.onload=img.onerror=null;
+  if(!u){box.className="tp";msg.textContent="Paste a thumbnail link to see a preview";img.removeAttribute("src");return}
+  if(!okImg(u)){box.className="tp bad";msg.textContent="Use a https:// image link or a file name like thumb1.jpg";img.removeAttribute("src");return}
+  box.className="tp";msg.textContent="Loading preview…";
+  img.onload=()=>box.className="tp ok";
+  img.onerror=()=>{box.className="tp bad";msg.textContent="Couldn't load this image. Check the link."};
+  img.src=u;
+}
+const dbn={};
+$("#cards").addEventListener("input",e=>{
+  const sec=e.target.closest("[data-i]"),k=e.target.dataset.k; if(!sec||!k)return;
+  const i=+sec.dataset.i; S.cards[i][k]=e.target.value; setDirty(true);
+  if(k==="thumb"){clearTimeout(dbn[i]);dbn[i]=setTimeout(()=>setThumb(i),350)}
+  if(k==="title")$(".cnt",sec).textContent=e.target.value.length+"/90";
+  renderPreview();
+});
+$("#cards").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]"); if(!b)return;
+  const i=+b.closest("[data-i]").dataset.i,a=b.dataset.act,c=S.cards;
+  if(a==="del"){if(!confirm(`Delete Post ${i+1}?`))return;c.splice(i,1)}
+  if(a==="up")[c[i-1],c[i]]=[c[i],c[i-1]];
+  if(a==="down")[c[i+1],c[i]]=[c[i],c[i+1]];
+  setDirty(true);renderEditor();renderPreview();
+});
+$("#add").onclick=()=>{if(S.cards.length<MAX){S.cards.push(blank());setDirty(true);renderEditor();renderPreview()}};
+[["name","channelName"],["chan","channelUrl"],["logo","logoUrl"]].forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{S[k]=e.target.value;setDirty(true);renderPreview()}));
+
+/* ---------- Live preview ---------- */
+function bg(u){return u&&IMG.test(u.trim())?`url("${u.trim().replace(/"/g,"%22")}"),${GRAD}`:GRAD}
+function renderPreview(){
+  $("#pvname").textContent=S.channelName||"Your Channel Name";
+  $("#pvav").style.backgroundImage=S.logoUrl&&IMG.test(S.logoUrl.trim())?`url("${S.logoUrl.trim().replace(/"/g,"%22")}")`:"none";
+  const pv=$("#pv");
+  pv.innerHTML=S.cards.length?S.cards.map(c=>`<div class="pc"><div class="th"></div><h3>${esc(c.title)||"Your title appears here"}</h3><p>${esc(c.meta)||"&nbsp;"}</p><div class="jb">Join Telegram Channel</div></div>`).join(""):'<div class="empty">No posts yet. Add one to see it here.</div>';
+  [...pv.querySelectorAll(".th")].forEach((el,i)=>el.style.backgroundImage=bg(S.cards[i].thumb));
+}
+
+/* ---------- Save ---------- */
+function validate(){
+  if(!TG.test(S.channelUrl.trim()))return "Enter a valid Telegram channel link, like https://t.me/yourchannel";
+  if(S.logoUrl.trim()&&!okImg(S.logoUrl.trim()))return "Logo link must be a https:// image link or a file name.";
+  for(let i=0;i<S.cards.length;i++){const c=S.cards[i],n="Post "+(i+1);
+    if(!c.title.trim())return n+": add a title.";
+    if(!okImg(c.thumb.trim()))return n+": add a valid thumbnail link.";
+    if(c.url.trim()&&!TG.test(c.url.trim()))return n+": Telegram link must look like https://t.me/...";}
+  return "";
+}
+async function save(){
+  const er=validate(); if(er)return toast(er,"bad");
+  const broken=[...document.querySelectorAll("#cards [data-i]")].filter(x=>x.querySelector(".tp.bad")).map(x=>+x.dataset.i+1);
+  if(broken.length&&!confirm(`The thumbnail of Post ${broken.join(", ")} does not load right now (wrong link, or file not uploaded yet). Save anyway?`))return toast("Not saved. Fix the thumbnail link first.","bad");
+  if(DEMO)return toast("Demo mode: nothing is saved. Add your Firebase config to publish.","ok");
+  const b=$("#save");b.disabled=true;b.textContent="Saving…";
+  try{
+    await F.setDoc(F.doc(db,"site","config"),{channelName:S.channelName.trim(),channelUrl:S.channelUrl.trim(),logoUrl:S.logoUrl.trim(),
+      cards:S.cards.map(c=>({title:c.title.trim(),thumb:c.thumb.trim(),url:c.url.trim(),meta:c.meta.trim()})),updatedAt:F.serverTimestamp()});
+    setDirty(false);toast("Saved. Your live page is updated.","ok");
+  }catch(e){toast(e.code==="permission-denied"?"Permission denied. Check Firestore rules and your admin email.":"Couldn't save: "+e.message,"bad")}
+  b.disabled=false;b.textContent="Save & publish";
+}
+$("#save").onclick=save;
+addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="s"&&!$("#app").hidden){e.preventDefault();save()}});
+addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
+</script>
+</body>
+</html>
